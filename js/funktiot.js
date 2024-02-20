@@ -1,7 +1,6 @@
 const input = document.querySelector('input')
 const output = document.querySelector('output')
-const span = document.querySelector('span')
-
+const guessCountSpan = document.getElementById('guessCount') // Lisätty spanin haku
 const words = [
     "ohjelmointi",
     "javascript",
@@ -10,28 +9,32 @@ const words = [
     "framework",
     "variable",
     "stylesheet",
-    "liberary",
+    "library",
     "asynchronous",
     "hypertext"
 ]
 
 let randomizedWord = ''
 let maskedWord = ''
+let guessCount = 0 // Lisätty arvausten laskuri
 
 const newGame = () => {
-    const random = Math.floor(Math.random() * 10) + 1
+    const random = Math.floor(Math.random() * 10) // Korjattu numeron generointi, jotta se olisi välillä 0-9
     randomizedWord = words[random]
     maskedWord = "*".repeat(randomizedWord.length)
+    guessCount = 0 // Nollataan arvausten laskuri uuden pelin alussa
     console.log(randomizedWord)
     output.innerHTML = maskedWord
-} 
+}
 
 const win = () => {
-    alert(`Olet arvannut oikein, sana oli ${randomizedWord}.`)
+    alert(`Olet arvannut oikein, sana oli ${randomizedWord}. Arvaustesi määrä oli ${guessCount}.`)
     newGame()
 }
 
 const replaceFoundChars = (guess) => {
+    guessCount++ // Lisätään arvauksen määrään yksi joka kerta, kun käyttäjä arvaa
+    guessCountSpan.textContent = guessCount; // Päivitetään arvausten määrä näytössä
     for (let i = 0;i<randomizedWord.length;i++) {
         const char = randomizedWord.substring(i,i+1)
         if (char === guess) {
@@ -55,7 +58,7 @@ input.addEventListener('keypress',(e) => {
             win()
         } else if (guess.length === 1) { 
           replaceFoundChars(guess)
-          if (maskedWord.toLocaleLowerCase() === randomizedWord.toLocaleLowerCase()) {
+          if (maskedWord.toLowerCase() === randomizedWord.toLowerCase()) {
                 win()
             }
         } else {
